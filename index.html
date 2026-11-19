@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#174ea6">
+  <meta name="description" content="Sistema de gestão de estoque do Mercado do Miguelzin.">
+  <title>Mercado do Miguelzin | Gestão de Estoque</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/" aria-label="Mercado do Miguelzin - início">
+        <span class="brand-icon"><i class="fa-solid fa-basket-shopping" aria-hidden="true"></i></span>
+        <span>Mercado do <strong>Miguelzin</strong></span>
+      </a>
+      <div class="topbar-label"><span class="status-dot"></span> Gestão de estoque</div>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="intro">
+      <div>
+        <p class="eyebrow">PAINEL DE CONTROLE</p>
+        <h1>Estoque do mercado</h1>
+        <p class="intro-text">Cadastre, acompanhe e organize os produtos do seu mercado.</p>
+      </div>
+      <div class="today-chip"><i class="fa-regular fa-calendar" aria-hidden="true"></i><span id="todayLabel">Hoje</span></div>
+    </section>
+
+    <div class="dashboard-grid">
+      <aside class="left-column">
+        <section class="panel form-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">PRODUTOS</p>
+              <h2 id="formTitle">Cadastrar produto</h2>
+            </div>
+            <span class="heading-icon"><i class="fa-solid fa-box-open" aria-hidden="true"></i></span>
+          </div>
+
+          <form id="productForm" class="product-form">
+            <div class="field">
+              <label for="nome">Nome do produto <span>*</span></label>
+              <input type="text" id="nome" name="nome" maxlength="120" placeholder="Ex.: Arroz tipo 1" autocomplete="off" required>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="preco">Preço (R$) <span>*</span></label>
+                <div class="input-prefix"><span>R$</span><input type="number" id="preco" name="preco" min="0" max="99999999" step="0.01" placeholder="0,00" required></div>
+              </div>
+              <div class="field">
+                <label for="estoque">Quantidade <span>*</span></label>
+                <input type="number" id="estoque" name="estoque" min="0" max="2147483647" step="1" placeholder="0" required>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="validade">Data de validade <span>*</span></label>
+              <input type="date" id="validade" name="validade" required>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" id="submitBtn" class="button button-primary"><i class="fa-solid fa-plus" aria-hidden="true"></i><span>Cadastrar produto</span></button>
+              <button type="button" id="cancelEditBtn" class="button button-light hidden">Cancelar</button>
+            </div>
+            <p class="required-note">* Campos obrigatórios</p>
+          </form>
+        </section>
+
+        <section class="stock-card">
+          <div class="stock-card-top">
+            <span class="stock-card-icon"><i class="fa-solid fa-cubes-stacked" aria-hidden="true"></i></span>
+            <span class="stock-card-caption">RESUMO DO ESTOQUE</span>
+          </div>
+          <p class="stock-number" id="totalProducts">0</p>
+          <p class="stock-description">Produtos cadastrados</p>
+          <div class="stock-card-footer"><i class="fa-solid fa-chart-line" aria-hidden="true"></i><span>Informações atualizadas automaticamente</span></div>
+        </section>
+      </aside>
+
+      <section class="panel inventory-panel">
+        <div class="inventory-heading">
+          <div>
+            <p class="eyebrow">GERENCIAMENTO</p>
+            <h2>Lista de produtos</h2>
+            <p class="inventory-subtitle">Consulte e atualize os itens cadastrados.</p>
+          </div>
+          <span class="inventory-count" id="inventoryCount">0 itens</span>
+        </div>
+
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          <input type="search" id="searchInput" placeholder="Buscar produto pelo nome..." aria-label="Buscar produto pelo nome">
+          <kbd>⌕</kbd>
+        </div>
+
+        <div class="table-wrap" id="tableWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Produto</th>
+                <th class="align-right">Preço</th>
+                <th class="align-center">Estoque</th>
+                <th class="align-center">Validade</th>
+                <th class="align-center">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="productTableBody"></tbody>
+          </table>
+        </div>
+
+        <div id="emptyState" class="empty-state hidden">
+          <span class="empty-icon"><i class="fa-solid fa-box-open" aria-hidden="true"></i></span>
+          <h3>Nenhum produto encontrado</h3>
+          <p>Cadastre um produto ou tente outra busca.</p>
+        </div>
+
+        <div id="loadingState" class="loading-state hidden"><i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Carregando produtos...</div>
+        <div class="table-footer"><span id="tableSummary">Mostrando 0 produtos</span><span><i class="fa-solid fa-cloud" aria-hidden="true"></i> Dados salvos no banco de dados</span></div>
+      </section>
+    </div>
+
+    <footer class="page-footer">Mercado do Miguelzin <span>•</span> Sistema de gestão de estoque</footer>
+  </main>
+
+  <div id="deleteModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="deleteTitle" aria-describedby="deleteDescription">
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-card">
+      <div class="modal-icon"><i class="fa-solid fa-trash-can" aria-hidden="true"></i></div>
+      <h2 id="deleteTitle">Excluir produto?</h2>
+      <p id="deleteDescription">Tem certeza de que deseja excluir <strong id="deleteItemName"></strong>? Essa ação não poderá ser desfeita.</p>
+      <div class="modal-actions">
+        <button type="button" id="cancelDeleteBtn" class="button button-light">Cancelar</button>
+        <button type="button" id="confirmDeleteBtn" class="button button-danger"><i class="fa-solid fa-trash" aria-hidden="true"></i> Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite">
+    <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+    <span id="toastMessage">Operação realizada com sucesso.</span>
+  </div>
+</body>
+</html>
