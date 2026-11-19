@@ -1,0 +1,10 @@
+{
+  "name": "mercado-do-miguelzin",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Sistema de gestão de estoque com HTML, CSS, JavaScript, Vercel e Supabase.",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0"
+  }
+}
